@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Princess</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff69b4, #ffb6c1, #ffe4e1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            backdrop-filter: blur(1px);
+        }
+
+        /* Overlay Halaman Awal */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 105, 180, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .overlay h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #ff1493, #dc143c);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #ccc, #999);
+            color: #333;
+            position: relative;
+        }
+
+        .btn-no:hover {
+            animation: moveNo 0.5s ease-in-out infinite;
+        }
+
+        @keyframes moveNo {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px) translateY(-5px); }
+            50% { transform: translateX(10px) translateY(5px); }
+            75% { transform: translateX(-5px) translateY(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Konten Utama (Tersembunyi Awal) */
+        .main-content {
+            display: none;
+            text-align: center;
+            z-index: 1;
+            padding: 20px;
+            max-width: 90%;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .main-content h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4em;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .main-content img:hover {
+            transform: scale(1.05);
+        }
+
+        .text-container {
+            max-width: 85%;
+            margin: 0 auto;
+            max-height: 40vh; /* Tinggi maksimal untuk kontrol */
+            overflow-y: auto; /* Scroll jika perlu */
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            animation: fadeIn 3s ease-in-out;
+            column-count: 2; /* Teks sejajar dalam 2 kolom */
+            column-gap: 20px; /* Jarak antar kolom */
+            column-rule: 1px solid rgba(255, 255, 255, 0.3); /* Garis pemisah kolom */
+        }
+
+        .text-container p {
+            font-size: 1.4em;
+            color: #fff;
+            line-height: 1.6;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            margin: 0 0 15px 0; /* Margin bawah untuk pemisah paragraf */
+            break-inside: avoid; /* Hindari pecah paragraf di tengah kolom */
+        }
+
+        .main-content button {
+            background: linear-gradient(45deg, #ff1493, #dc143c);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .main-content button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Animasi Hati Jatuh */
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff1493;
+            font-size: 1.5em;
+            animation: fall 6s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        /* Animasi Bubble (Gelembung Bocil) */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            color: #ff1493;
+            font-size: 1.5em;
+            animation: bubbleRise 8s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes bubbleRise {
+            0% { transform: translateY(0) scale(1); opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsivitas */
+        @media (max-width: 768px) {
+            .overlay h1, .main-content h1 { font-size: 2.5em; }
+            .main-content img { max-width: 90%; }
+            .text-container { 
+                column-count: 1; /* 1 kolom di ponsel agar mudah baca */
+                max-height: 30vh; 
+                font-size: 1.2em; 
+            }
+            .btn { font-size: 1.2em; padding: 12px 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animasi Bubble dan Hati -->
+    <div class="bubbles" id="bubbles"></div>
+    <div class="hearts" id="hearts"></div>
+    
+    <!-- Overlay Halaman Awal -->
+    <div class="overlay" id="overlay">
+        <h1>Hari Valentine</h1>
+        <div class="buttons">
+            <button class="btn btn-no" id="btnNo">No</button>
+            <button class="btn btn-yes" id="btnYes">Yes</button>
+        </div>
+    </div>
+    
+    <!-- Konten Utama -->
+    <div class="main-content" id="mainContent">
+        <h1>💖 My Princess 💖</h1>
+        <img src="princess.jpg" alt="My Princess">
+        <div class="text-container">
+            <p>Kamu adalah cahaya dalam hidupku. Aku mencintaimu lebih dari segalanya. 💖</p>
+            <p>happyyy valentineeee dayyy sayangggg🤍 mungkinnnn akuuuu bukannn oranggg yanggg palinggg romantisss, bukannnn jugaaaa yanggg palingggg sempurnaaa buattt kamuuu, tapiii satuuu halll yanggg pastiii, kamuuu selaluuu berusahaaa jadiii yanggg terbaikkk untukkk hubungannn kitaaa. makasiii udaaa teteppp bertahannn, udaaa sabarr ngadepinnn sifattt akuuu, dannn teteppp memilihhh akuuu setiappp hariii</p>
+            <p>valentinee tahunnn iniii mungkinnn sederhanaaa, tanpaaa hadiahhh mewahhh atauuu coklattt mahalll tapiii semogaaa kamuuu tauuu cintaaa akuuu keee kamuuu gaaa pernahhh sederhanaaa kamuuu adalahhh rumahhh yanggg selaluuu inginnn akuuu tujuuu alasannn kenpaaa akuuu teteppp kuattt, dannn alasannn kenapaaa akuuu percayaaa kalooo cintaaa ituuu benerrr benerrr adaaa semogaaa kitaaaa teteppp bersamaaa bukannn cumaaa diii valentinee kaliii iniii tapiii diii banyakkk valentineee lainnyaaa jangann bosennn samaaa akuuu yaaa karnaaa akuuu masihh mauu samaa kamuuu, hariii iniii, besokkk, dannn seterusnyaaaa🤍🤍💐💐💐</p>
+            <p>#Fajriimup 🦖</p>
+        </div>
+        <button onclick="playMusic()">Putar Musik Cinta</button>
+    </div>
+    
+    <script>
+        // Fungsi untuk Overlay
+        const overlay = document.getElementById('overlay');
+        const mainContent = document.getElementById('mainContent');
+        const btnYes = document.getElementById('btnYes');
+
+        btnYes.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            mainContent.style.display = 'flex';
+        });
+
+        // Animasi Hati Jatuh
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 2 + 1.5) + 'em';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            document.getElementById('hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 400);
+
+        // Animasi Bubble
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.innerHTML = '💖';
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            document.getElementById('bubbles').appendChild(bubble);
+            setTimeout(() => bubble.remove(), 8000);
+        }
+        setInterval(createBubble, 1000);
+
+        // Fungsi Musik
+        function playMusic() {
+            const audio = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.wav');
+            audio.play();
+        }
+    </script>
+</body>
+</html>
